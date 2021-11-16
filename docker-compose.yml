@@ -1,0 +1,34 @@
+---
+version: "3.7"
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    restart: unless-stopped
+    env_file:
+      - 'env.postgres'
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgresql/db:/data/db:rw
+      - ./postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql:ro
+
+  django-web-app:
+    build:
+      context: .
+      dockerfile: ./django_web_app/Dockerfile
+    container_name: django-web-app
+    env_file:
+      - 'env.django_web_app'
+#    user: root
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+    command: bash -c "python3 /app/simple_web/manage.py migrate && python3 /app/simple_web/manage.py runserver 0.0.0.0:8000"
+#    command: bash -c "python3 /app/simple_web/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./django_web_app/:/app:ro
+
+# python3 /app/simple_backend/manage.py migrate &&
