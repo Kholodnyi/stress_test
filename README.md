@@ -1,6 +1,8 @@
 # Stress testing
 Example web server with simple api prepared for stress testing.
 
+Also, for avoiding cache stampede, [CachedRetrieveMixin](https://github.com/Kholodnyi/stress_test/blob/master/django_web_app/simple_web/simple_web/mixins.py#L8) was added. This mixin can be used instead of regular retrieve mixin in order to cache model data for random time between 4 and 5 min.  
+
 ### Requirements:
  - Python >3.8
  - [docker](https://docs.docker.com/get-docker/) >20.10.7
